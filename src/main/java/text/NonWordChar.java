@@ -1,6 +1,6 @@
 package text;
 
-public class NonWordChar extends SentencePart {
+public class NonWordChar extends WordPart {
     private char value;
 
     @Override

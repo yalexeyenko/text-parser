@@ -1,6 +1,6 @@
 package text;
 
-public class WordChar extends SentencePart {
+public class WordChar extends WordPart {
     private final char value;
 
     private WordChar(char value) {

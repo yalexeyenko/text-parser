@@ -1,6 +1,6 @@
 package text;
 
-public class PunctuationMark {
+public class PunctuationMark extends SentencePart {
     private char value;
 
     @Override

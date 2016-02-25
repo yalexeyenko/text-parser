@@ -17,6 +17,26 @@ public class Text {
         paragraphs.remove(paragraph);
     }
 
+    public List<Paragraph> getParagraphs() {
+        ArrayList<Paragraph> paragraphList = new ArrayList<>();
+        paragraphList.addAll(paragraphs);
+        return paragraphList;
+    }
+
+    public List<Sentence> getSentences() {
+        ArrayList<Sentence> sentences = new ArrayList<>();
+        for(Paragraph paragraph : paragraphs) {
+            sentences.addAll(paragraph.getSentences());
+        }
+        return sentences;
+    }
+
+    public Paragraph getParagraph(int index) {
+        return paragraphs.get(index);
+    }
+
+
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Text{");

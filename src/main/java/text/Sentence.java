@@ -17,6 +17,16 @@ public class Sentence {
         sentenceParts.remove(sentencePart);
     }
 
+    public List<Word> getWords() {
+        ArrayList<Word> wordList = new ArrayList<>();
+        for (SentencePart sentencePart : sentenceParts) {
+            if (sentencePart instanceof Word) {
+                wordList.add((Word) sentencePart);
+            }
+        }
+        return wordList;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Sentence{");

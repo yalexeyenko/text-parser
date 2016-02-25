@@ -17,6 +17,12 @@ public class Paragraph {
         sentences.remove(sentence);
     }
 
+    public List<Sentence> getSentences() {
+        ArrayList<Sentence> sentenceList = new ArrayList<>();
+        sentenceList.addAll(sentences);
+        return sentenceList;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Paragraph{");

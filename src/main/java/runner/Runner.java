@@ -16,7 +16,7 @@ public class Runner {
         String result = text.toPlainString(new StringBuilder());
 
         System.out.println(textString.equals(result));
-        System.out.print(result);
+//        System.out.print(result);
 
 
 

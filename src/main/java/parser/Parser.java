@@ -1,5 +1,7 @@
 package parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import text.Char;
 import text.Component;
 import text.CompositeType;
@@ -9,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
+
+    private final static Logger LOG = LoggerFactory.getLogger(Parser.class);
+
     private static Map<CompositeType, String> regexes;
     private static Map<CompositeType, CompositeType> components;
 
@@ -26,6 +31,8 @@ public class Parser {
         components.put(CompositeType.SENTENCE, CompositeType.WORD);
     }
 
+
+
     public TextComposite parse (String string, CompositeType type) throws ClassNotFoundException {
         if (type.equals(CompositeType.WORD)) {
             TextComposite composite = new TextComposite(type);
@@ -33,11 +40,14 @@ public class Parser {
                 char ch = string.charAt(i);
                 Char charr = Char.valueOf(ch);
                 composite.add(charr);
+                LOG.info(charr.getType().name() + ": " + charr);
             }
+            LOG.info(composite.getCompositeType().name() + ": " + string);
             return composite;
         }
         String regex = regexes.get(type);
         TextComposite composite = new TextComposite(type);
+        LOG.info(composite.getCompositeType().name());
         String[] chunks = string.split(regex);
         CompositeType childType = components.get(type);
         for (String chunk : chunks) {

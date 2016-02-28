@@ -1,50 +1,49 @@
 package parser;
 
-import text.*;
-import text2.Char;
+import text.Char;
+import text.Component;
+import text.CompositeType;
+import text.TextComposite;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
-    private Map<String, String> regex = new HashMap<>();
-    private Map<String, String> components = new HashMap<>();
+    private static Map<CompositeType, String> regexes;
+    private static Map<CompositeType, CompositeType> components;
 
-    public Text parseText(String textString) {
-        Text text = new Text();
-        String[] paragraphStrings = textString.split("(?<=\\n)");
-        for(String paragraphString : paragraphStrings) {
-            Paragraph paragraph = parseParagraph(paragraphString);
-        }
-        return text;
+    static {
+        regexes  = new HashMap<>();
+        regexes.put(CompositeType.TEXT, "(?<=\\n)");
+        regexes.put(CompositeType.PARAGRAPH, "(?<=[.!?])(?= [A-Z])");
+        regexes.put(CompositeType.SENTENCE, "(?<=\\s+)");
     }
 
-    private Paragraph parseParagraph(String paragraphString) {
-        Paragraph paragraph = new Paragraph();
-        String[] sentenceStrings = paragraphString.split("(?<=[.!?])(?=\\ [A-Z])");
-        for (String sentenceString : sentenceStrings) {
-            Sentence sentence = parseSentence(sentenceString);
-        }
-        return paragraph;
+    static {
+        components = new HashMap<>();
+        components.put(CompositeType.TEXT, CompositeType.PARAGRAPH);
+        components.put(CompositeType.PARAGRAPH, CompositeType.SENTENCE);
+        components.put(CompositeType.SENTENCE, CompositeType.WORD);
     }
 
-    private Sentence parseSentence(String sentenceString) {
-        Sentence sentence = new Sentence();
-        String[] wordStrings = sentenceString.split("\\s+");
-        for (String wordString : wordStrings) {
-            Word word = parseWord(wordString);
+    public TextComposite parse (String string, CompositeType type) throws ClassNotFoundException {
+        if (type.equals(CompositeType.WORD)) {
+            TextComposite composite = new TextComposite(type);
+            for (int i = 0; i < string.length(); i++) {
+                char ch = string.charAt(i);
+                Char charr = Char.valueOf(ch);
+                composite.add(charr);
+            }
+            return composite;
         }
-        return sentence;
-    }
-
-    private Word parseWord(String wordString) {
-        Word word = new Word();
-        char[] wordChars = wordString.toCharArray();
-        for (char wordChar : wordChars) {
-            WordChar ch = WordChar.valueOf(wordChar);
-            word.add(ch);
+        String regex = regexes.get(type);
+        TextComposite composite = new TextComposite(type);
+        String[] chunks = string.split(regex);
+        CompositeType childType = components.get(type);
+        for (String chunk : chunks) {
+            Component component = parse(chunk, childType);
+            composite.add(component);
         }
-        return word;
+        return composite;
     }
-
 }

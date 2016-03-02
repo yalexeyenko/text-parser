@@ -5,48 +5,53 @@ import java.util.List;
 
 public class TextComposite implements Component {
     private List<Component> components;
-    private CompositeType compositeType;
+    private Type type;
+    private int size;
 
-    public TextComposite(CompositeType compositeType) {
+    public TextComposite(Type type) {
         components = new ArrayList<>();
-        this.compositeType = compositeType;
+        this.type = type;
+    }
+
+    public Component getComponent(int index) {
+        return components.get(index);
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public void add(Component component) {
         components.add(component);
     }
 
-    public void remove(Component component) {
-        components.remove(component);
-    }
-
     public int size() {
         return components.size();
     }
 
-    public CompositeType getCompositeType() {
-        return compositeType;
+    public List<Component> getComponents() {
+        return components;
     }
 
-
-
-//    public List<Component> getComponents() {
-//        ArrayList<Component> componentList = new ArrayList<>();
-//        for(Component component : components) {
-//            componentList.addAll(component.getComponents());
-//        }
-//        return componentList;
-//    }
-
-    public Component getComponent(int index) {
-        return components.get(index);
+    @Override
+    public String toString() {
+        return "TextComposite{" +
+                "type=" + type +
+                ", size=" + size +
+                '}';
     }
 
-    public String toPlainString(StringBuilder sb) {
+    public StringBuilder toPlainString(StringBuilder sb) {
         for (Component component : components) {
             component.toPlainString(sb);
         }
-        return sb.toString();
+        return sb;
     }
 
+    public enum Type {
+        TEXT,
+        PARAGRAPH,
+        SENTENCE,
+        WORD
+    }
 }

@@ -4,56 +4,68 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import text.Char;
 import text.Component;
-import text.CompositeType;
 import text.TextComposite;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class Parser {
 
     private final static Logger LOG = LoggerFactory.getLogger(Parser.class);
 
-    private static Map<CompositeType, String> regexes;
-    private static Map<CompositeType, CompositeType> components;
-
-    static {
-        regexes  = new HashMap<>();
-        regexes.put(CompositeType.TEXT, "(?<=\\n)");
-        regexes.put(CompositeType.PARAGRAPH, "(?<=[.!?])(?= [A-Z])");
-        regexes.put(CompositeType.SENTENCE, "(?<=\\s+)");
-    }
+    private static Map<TextComposite.Type, TextComposite.Type> components;
 
     static {
         components = new HashMap<>();
-        components.put(CompositeType.TEXT, CompositeType.PARAGRAPH);
-        components.put(CompositeType.PARAGRAPH, CompositeType.SENTENCE);
-        components.put(CompositeType.SENTENCE, CompositeType.WORD);
+        components.put(TextComposite.Type.TEXT, TextComposite.Type.PARAGRAPH);
+        components.put(TextComposite.Type.PARAGRAPH, TextComposite.Type.SENTENCE);
+        components.put(TextComposite.Type.SENTENCE, TextComposite.Type.WORD);
     }
 
+    public TextComposite parse(String string) {
+        return parse(string, TextComposite.Type.TEXT);
+    }
 
-
-    public TextComposite parse (String string, CompositeType type) throws ClassNotFoundException {
-        if (type.equals(CompositeType.WORD)) {
-            TextComposite composite = new TextComposite(type);
-            for (int i = 0; i < string.length(); i++) {
-                char ch = string.charAt(i);
-                Char charr = Char.valueOf(ch);
-                composite.add(charr);
-                LOG.info(charr.getType().name() + ": " + charr);
-            }
-            LOG.info(composite.getCompositeType().name() + ": " + string);
-            return composite;
-        }
-        String regex = regexes.get(type);
+    public TextComposite parse(String string, TextComposite.Type type) {
         TextComposite composite = new TextComposite(type);
-        LOG.info(composite.getCompositeType().name());
-        String[] chunks = string.split(regex);
-        CompositeType childType = components.get(type);
+        String[] chunks = string.split(getRegex(type));
+        TextComposite.Type childType = components.get(type);
         for (String chunk : chunks) {
-            Component component = parse(chunk, childType);
-            composite.add(component);
+            if (childType == TextComposite.Type.WORD) {
+                TextComposite wComposite = new TextComposite(TextComposite.Type.WORD);
+                for (int i = 0; i < chunk.length(); i++) {
+                    Char character = Char.valueOf(chunk.charAt(i));
+                    if (character.isValidWordChar()) {
+                        wComposite.add(character);
+                        if (!(Char.valueOf(chunk.charAt(i + 1)).isValidWordChar())) {//!!!
+                            composite.add(wComposite);
+                        }
+                    } else {
+                        composite.add(character);
+                    }
+                }
+            } else {
+                Component component = parse(chunk, childType);
+                composite.add(component);
+
+            }
         }
+        LOG.debug(composite.getType().name() + " : " + composite.size());
         return composite;
     }
+
+    private static String getRegex(TextComposite.Type type) {
+        InputStream in = Parser.class.getClassLoader().getResourceAsStream("regex.properties");
+        Properties regexProperties = new Properties();
+        try {
+            regexProperties.load(in);
+        } catch (IOException e) {
+            LOG.error("File was not found");
+        }
+        return regexProperties.getProperty(type.name().toLowerCase());
+    }
+
 }

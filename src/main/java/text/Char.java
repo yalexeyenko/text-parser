@@ -48,7 +48,6 @@ public class Char implements Component {
     }
 
     public boolean isValidWordChar() {
-        System.out.println("!!!!!" + this + " " + this.getType());
         return type.equals(Type.LETTER) || type.equals(Type.DIGIT) || type.equals(Type.WORDMARK);
     }
 

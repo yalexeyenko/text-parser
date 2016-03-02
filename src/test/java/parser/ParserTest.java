@@ -4,7 +4,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import reader.TextReader;
-import text.CompositeType;
 import text.TextComposite;
 
 import static org.junit.Assert.*;
@@ -19,8 +18,8 @@ public class ParserTest {
     public void setUp() throws Exception {
         parser = new Parser();
         textString = TextReader.readFileToString("books/cyclone.txt");
-        textComposite = parser.parse(textString, CompositeType.TEXT);
-        result = textComposite.toPlainString(new StringBuilder());
+        textComposite = parser.parse(textString, TextComposite.Type.TEXT);
+        result = textComposite.toPlainString(new StringBuilder()).toString();
     }
 
     @After

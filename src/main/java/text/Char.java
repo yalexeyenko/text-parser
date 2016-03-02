@@ -1,46 +1,35 @@
 package text;
 
 public class Char implements Component {
+    private static final String PUNCTUATION_MARKS = ".,?!:;―-()[]{}\"";
+    private static final String WORD_MARKS = "'";
     private final char value;
-    private CharType type;
-
+    private Type type;
 
     private Char(char value) {
         this.value = value;
-        type = getType();
+        type = checkType();
     }
 
-    public char getValue() {
-        return value;
+    public Type getType() {
+        return type;
     }
 
-    public CharType getType() {
-        if (value == '.' ||
-            value == '?' ||
-            value == '!' ||
-            value == ':' ||
-            value == ';' ||
-            value == ',' ||
-            value == '―' ||
-            value == '(' ||
-            value == ')' ||
-            value == '[' ||
-            value == ']') {
-            type = CharType.PUNCTUATION;
+    private Type checkType() {
+        if (PUNCTUATION_MARKS.indexOf(value) > -1) {
+            type = Type.PUNCTUATION;
         }
-        else if (value == '"' ||
-                value == '\'' ||
-                value == '-') {
-            type = CharType.NONWORD;
+        else if (WORD_MARKS.indexOf(value) > -1) {
+            type = Type.WORDMARK;
         }
         else if (Character.isWhitespace(value)) {
-            type = CharType.WHITE_SPACE;
+            type = Type.WHITE_SPACE;
         }
         else if (Character.isLetter(value)) {
-            type = CharType.LETTER;
+            type = Type.LETTER;
         }
         else if (Character.isDigit(value)) {
-            type = CharType.DIGIT;
+            type = Type.DIGIT;
         }
         return type;
     }
@@ -50,23 +39,36 @@ public class Char implements Component {
     }
 
     public static Char valueOf(char ch) {
-        Char charr = Cache.chars[ch];
-        if(charr == null) {
-            charr = new Char(ch);
-            Cache.chars[ch] = charr;
+        Char cachedChar = Cache.chars[ch];
+        if(cachedChar == null) {
+            cachedChar = new Char(ch);
+            Cache.chars[ch] = cachedChar;
         }
-        return charr;
+        return cachedChar;
+    }
+
+    public boolean isValidWordChar() {
+        return type.equals(Type.LETTER) || type.equals(Type.DIGIT) || type.equals(Type.WORDMARK);
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Char{");
-        sb.append("value=").append(value);
-        sb.append('}');
-        return sb.toString();
+        return "Char{" +
+                "value=" + value +
+                ", type=" + type +
+                '}';
     }
 
-    public String toPlainString(StringBuilder sb){
-            return sb.append(value).toString();
+    public StringBuilder toPlainString(StringBuilder sb){
+            return sb.append(value);
     }
+
+    public enum Type {
+        PUNCTUATION,
+        WORDMARK,
+        WHITE_SPACE,
+        LETTER,
+        DIGIT
+    }
+
 }

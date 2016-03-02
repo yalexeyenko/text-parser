@@ -1,8 +1,8 @@
 package text;
 
 public class Char implements Component {
-    private static final String PUNCTUATION_MARKS = ".,?!:;―-()[]{}\"";
-    private static final String WORD_MARKS = "'";
+    private static final String PUNCTUATION_MARKS = ".,?!:;―—()[]{}\"";
+    private static final String WORD_MARKS = "-'";
     private final char value;
     private Type type;
 
@@ -48,6 +48,7 @@ public class Char implements Component {
     }
 
     public boolean isValidWordChar() {
+        System.out.println("!!!!!" + this + " " + this.getType());
         return type.equals(Type.LETTER) || type.equals(Type.DIGIT) || type.equals(Type.WORDMARK);
     }
 

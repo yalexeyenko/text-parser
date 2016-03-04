@@ -16,15 +16,6 @@ public class Parser {
 
     private final static Logger LOG = LoggerFactory.getLogger(Parser.class);
 
-    private static Map<TextComposite.Type, TextComposite.Type> components;
-
-    static {
-        components = new HashMap<>();
-        components.put(TextComposite.Type.TEXT, TextComposite.Type.PARAGRAPH);
-        components.put(TextComposite.Type.PARAGRAPH, TextComposite.Type.SENTENCE);
-        components.put(TextComposite.Type.SENTENCE, TextComposite.Type.WORD);
-    }
-
     public TextComposite parse(String string) {
         return parse(string, TextComposite.Type.TEXT);
     }
@@ -32,7 +23,7 @@ public class Parser {
     public TextComposite parse(String string, TextComposite.Type type) {
         TextComposite composite = new TextComposite(type);
         String[] chunks = string.split(getRegex(type));
-        TextComposite.Type childType = components.get(type);
+        TextComposite.Type childType = getChildType(type);
         for (String chunk : chunks) {
             if (childType == TextComposite.Type.WORD) {
                 TextComposite wComposite = new TextComposite(TextComposite.Type.WORD);
@@ -50,7 +41,6 @@ public class Parser {
             } else {
                 Component component = parse(chunk, childType);
                 composite.add(component);
-
             }
         }
         LOG.debug(composite.getType().name() + " : " + composite.size());
@@ -66,6 +56,18 @@ public class Parser {
             LOG.error("File was not found");
         }
         return regexProperties.getProperty(type.name().toLowerCase());
+    }
+
+    private static TextComposite.Type getChildType(TextComposite.Type type) {
+        InputStream in = Parser.class.getClassLoader().getResourceAsStream("components.properties");
+        Properties componentProperties = new Properties();
+        try {
+            componentProperties.load(in);
+        } catch (IOException e) {
+            LOG.error("File was not found");
+        }
+        String child = componentProperties.getProperty(type.name().toLowerCase());
+        return TextComposite.Type.valueOf(child.toUpperCase());
     }
 
 }

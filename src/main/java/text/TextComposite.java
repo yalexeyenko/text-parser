@@ -33,16 +33,20 @@ public class TextComposite implements Component, Iterable<Component> {
         components.add(component);
     }
 
+    public void remove(int index) {
+        components.remove(index);
+    }
+
+    public void set(int index, Component component) {
+        components.set(index, component);
+    }
+
     public int getIndexOf(Component component) {
         return this.components.indexOf(component);
     }
 
     public int size() {
         return components.size();
-    }
-
-    public List<Component> getComponents() {
-        return components;
     }
 
     public List<TextComposite> getParagraphs() {

@@ -10,8 +10,4 @@ public class TextReader {
         return new Scanner(in).useDelimiter("\\A").next();
     }
 
-//    public static void main(String[] args) {
-//        String s = readFileToString("books/cyclone.txt");
-//        System.out.println(s);
-//    }
 }

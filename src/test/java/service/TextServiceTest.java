@@ -3,9 +3,14 @@ package service;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import text.TextComposite;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static service.TextService.changeFirstAndLastWordInSentences;
+import static service.TextService.findUniqueWords;
+import static service.TextService.swapFirstAndLastWordsInSentences;
 
 public class TextServiceTest {
     private String sourceString = "Today, however, they were not playing. Uncle Henry sat upon the doorstep and looked " +
@@ -25,7 +30,7 @@ public class TextServiceTest {
     }
 
     @Test
-    public void testChangeFirstAndLastWordInSentences() throws Exception {
+    public void swapFirstAndLastWordInSentences() throws Exception {
         String resultString = "playing, however, they were not Today. usual Henry sat upon the doorstep and looked " +
                 "anxiously at the sky, which was even grayer than Uncle. too stood in the door with Toto " +
                 "in her arms, and looked at the sky Dorothy. dishes Em was washing the Aunt.\n" +
@@ -33,9 +38,19 @@ public class TextServiceTest {
                 "where the long grass bowed in waves before the coming From. also now came a sharp whistling " +
                 "in the air from the south, and as they turned their eyes that way they saw ripples in the grass " +
                 "coming from that direction There.";
-        String res = changeFirstAndLastWordInSentences(sourceString);
+        String res = swapFirstAndLastWordsInSentences(sourceString);
         assertEquals(resultString, res);
     }
+
+    @Test
+    public void testFindUniqueWords() throws Exception {
+        String result = "Today however were not playing";
+        List<String> uniqueWordsExpected = Arrays.asList(result.split(" "));
+        List<String> uniqueWordsResult =  findUniqueWords(sourceString);
+        assertEquals(uniqueWordsExpected, uniqueWordsResult);
+    }
+
+
 
 
 }

@@ -30,7 +30,7 @@ public class TextServiceTest {
     }
 
     @Test
-    public void swapFirstAndLastWordInSentences() throws Exception {
+    public void testSwapFirstAndLastWordInSentences() throws Exception {
         String resultString = "playing, however, they were not Today. usual Henry sat upon the doorstep and looked " +
                 "anxiously at the sky, which was even grayer than Uncle. too stood in the door with Toto " +
                 "in her arms, and looked at the sky Dorothy. dishes Em was washing the Aunt.\n" +

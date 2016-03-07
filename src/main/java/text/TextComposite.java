@@ -2,9 +2,9 @@ package text;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -146,6 +146,8 @@ public class TextComposite implements Component, Iterable<Component> {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+    public static final Comparator<TextComposite> WORDS_NUMBER_COMPARE = (o1, o2) -> Integer.compare(o1.getWords().size(), o2.getWords().size());
 
     public enum Type {
         TEXT,

@@ -14,7 +14,6 @@ public class TextComposite implements Component, Iterable<Component> {
 
     private List<Component> components;
     private Type type;
-    private int size;
 
     public TextComposite(Type type) {
         components = new ArrayList<>();
@@ -52,7 +51,7 @@ public class TextComposite implements Component, Iterable<Component> {
     public List<TextComposite> getParagraphs() {
         List<TextComposite> paragraphsList = new ArrayList<>();
         fillParagraphsList(paragraphsList);
-        LOG.debug("Paragraphs number: " + paragraphsList.size());
+//        LOG.debug("Paragraphs number: " + paragraphsList.size());
         return paragraphsList;
     }
 
@@ -72,7 +71,7 @@ public class TextComposite implements Component, Iterable<Component> {
     public List<TextComposite> getSentences() {
         List<TextComposite> sentencesList = new ArrayList<>();
         fillSentencesList(sentencesList);
-        LOG.debug("Sentences number: " + sentencesList.size());
+//        LOG.debug("Sentences number: " + sentencesList.size());
         return sentencesList;
     }
 
@@ -92,7 +91,7 @@ public class TextComposite implements Component, Iterable<Component> {
     public List<TextComposite> getWords() {
         List<TextComposite> wordsList = new ArrayList<>();
         fillWordsList(wordsList);
-        LOG.debug("Words number: " + wordsList.size());
+//        LOG.debug("Words number: " + wordsList.size());
         return wordsList;
     }
 
@@ -113,7 +112,7 @@ public class TextComposite implements Component, Iterable<Component> {
     public String toString() {
         return "TextComposite{" +
                 "type=" + type +
-                ", size=" + size +
+                ", size=" + size() +
                 '}';
     }
 
@@ -127,6 +126,25 @@ public class TextComposite implements Component, Iterable<Component> {
     @Override
     public Iterator<Component> iterator() {
         return components.iterator();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TextComposite that = (TextComposite) o;
+
+        if (components != null ? !components.equals(that.components) : that.components != null) return false;
+        return type == that.type;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = components != null ? components.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 
     public enum Type {

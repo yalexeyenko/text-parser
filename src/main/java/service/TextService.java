@@ -1,5 +1,7 @@
 package service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import parser.Parser;
 import text.Component;
 import text.TextComposite;
@@ -9,7 +11,13 @@ import java.util.List;
 
 public class TextService {
 
-    public static String changeFirstAndLastWordInSentences(String text) {
+    private final static Logger LOG = LoggerFactory.getLogger(TextService.class);
+
+    /**Swaps first and last words in every sentence of text.
+     * @param text the source text
+     * @return     the modified text
+     */
+    public static String swapFirstAndLastWordsInSentences(String text) {
         Parser parser = new Parser();
         TextComposite textComposite = parser.parse(text);
         List<TextComposite> sentences = textComposite.getSentences();
@@ -27,5 +35,39 @@ public class TextService {
         }
         return textComposite.toPlainString(new StringBuilder()).toString();
     }
+
+    /**
+     * Searches for unique words in first sentence, which does not appear in other sentences
+     * @param text          the source text
+     * @return uniqueWords  the list with unique words found
+     */
+    public static List<String> findUniqueWords(String text) {
+        Parser parser = new Parser();
+        TextComposite textComposite = parser.parse(text);
+        List<TextComposite> sentences = textComposite.getSentences(); // get all sentences of text
+        TextComposite firstSentence = sentences.get(0);
+        List<TextComposite> uniqueWords = firstSentence.getWords(); // list for unique words
+        LOG.debug("First sentence size: {}", firstSentence.size());
+        List<TextComposite> subSentences = sentences.subList(1, sentences.size());
+        LOG.debug("Other sentences number: {}", subSentences.size());
+        for (TextComposite word : firstSentence.getWords()) {
+            for (TextComposite sentence : subSentences) {
+                for (TextComposite wordSource : sentence.getWords()) {
+                    if ((word.toPlainString(new StringBuilder()).toString()).equalsIgnoreCase(
+                            (wordSource.toPlainString(new StringBuilder()).toString())
+                    )) {
+                        uniqueWords.remove(word);
+                    }
+                }
+            }
+        }
+        List<String> uniqueWordsList = new ArrayList<>();
+        for (TextComposite uniqueWord : uniqueWords) {
+            uniqueWordsList.add(uniqueWord.toPlainString(new StringBuilder()).toString());
+        }
+        return uniqueWordsList;
+    }
+
+
 
 }

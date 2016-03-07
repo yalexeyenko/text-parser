@@ -13,7 +13,7 @@ public class TextService {
 
     private final static Logger LOG = LoggerFactory.getLogger(TextService.class);
 
-    /**Swaps first and last words in every sentence of text.
+    /**Swaps first and last words in every sentence of String text.
      * @param text the source text
      * @return     the modified text
      */
@@ -37,7 +37,7 @@ public class TextService {
     }
 
     /**
-     * Searches for unique words in first sentence, which does not appear in other sentences
+     * Searches for unique words in first sentence of String text, which does not appear in other sentences
      * @param text          the source text
      * @return uniqueWords  the list with unique words found
      */
@@ -66,6 +66,22 @@ public class TextService {
             uniqueWordsList.add(uniqueWord.toPlainString(new StringBuilder()).toString());
         }
         return uniqueWordsList;
+    }
+    /**
+     * Sorts sentences in a String text by words number
+     * @param text          the source text
+     * @return sortedText   the list of sorted sentences
+     */
+    public static List<String> sortTextByWordsCountInSentences(String text) {
+        Parser parser = new Parser();
+        TextComposite textComposite = parser.parse(text);
+        List<String> sortedText = new ArrayList<>();
+        List<TextComposite> sentences = textComposite.getSentences();
+        sentences.sort(TextComposite.WORDS_NUMBER_COMPARE);
+        for (TextComposite sentence : sentences) {
+            sortedText.add((sentence.toPlainString(new StringBuilder()).toString()).trim());
+        }
+        return sortedText;
     }
 
 

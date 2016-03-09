@@ -29,20 +29,10 @@ public class TextCompositeTest {
     }
 
     @Test
-    public void testGetWords() throws Exception {
+    public void testGetComposite() throws Exception {
         TextComposite textComposite = parser.parse(textString);
-        assertEquals(107, textComposite.getWords().size());
-    }
-
-    @Test
-    public void testGetSentences() throws Exception {
-        TextComposite textComposite = parser.parse(textString);
-        assertEquals(6, textComposite.getSentences().size());
-    }
-
-    @Test
-    public void testGetParagraphs() throws Exception {
-        TextComposite textComposite = parser.parse(textString);
-        assertEquals(2, textComposite.getParagraphs().size());
+        assertEquals(107, textComposite.getComposite(TextComposite.Type.WORD).size());
+        assertEquals(6, textComposite.getComposite(TextComposite.Type.SENTENCE).size());
+        assertEquals(2, textComposite.getComposite(TextComposite.Type.PARAGRAPH).size());
     }
 }

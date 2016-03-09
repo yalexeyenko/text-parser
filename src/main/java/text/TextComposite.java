@@ -48,61 +48,21 @@ public class TextComposite implements Component, Iterable<Component> {
         return components.size();
     }
 
-    public List<TextComposite> getParagraphs() {
-        List<TextComposite> paragraphsList = new ArrayList<>();
-        fillParagraphsList(paragraphsList);
-//        LOG.debug("Paragraphs number: " + paragraphsList.size());
-        return paragraphsList;
+    public List<TextComposite> getComposite(Type type) {
+        List<TextComposite> compositeList = new ArrayList<>();
+        fillCompositeList(compositeList, type);
+//        LOG.debug(type.name() + " number: {}", compositeList.size());
+        return compositeList;
     }
 
-    private void fillParagraphsList(List<TextComposite> paragraphsList) {
+    private void fillCompositeList(List<TextComposite> compositeList, Type type) {
         for (Component component : this.components) {
             if (component instanceof TextComposite) {
                 TextComposite textComposite = (TextComposite) component;
-                if (textComposite.getType() == Type.PARAGRAPH) {
-                    paragraphsList.add(textComposite);
+                if (textComposite.getType() == type) {
+                    compositeList.add(textComposite);
                 } else {
-                    textComposite.fillParagraphsList(paragraphsList);
-                }
-            }
-        }
-    }
-
-    public List<TextComposite> getSentences() {
-        List<TextComposite> sentencesList = new ArrayList<>();
-        fillSentencesList(sentencesList);
-//        LOG.debug("Sentences number: " + sentencesList.size());
-        return sentencesList;
-    }
-
-    private void fillSentencesList(List<TextComposite> sentencesList) {
-        for (Component component : this.components) {
-            if (component instanceof TextComposite) {
-                TextComposite textComposite = (TextComposite) component;
-                if (textComposite.getType() == Type.SENTENCE) {
-                    sentencesList.add(textComposite);
-                } else {
-                    textComposite.fillSentencesList(sentencesList);
-                }
-            }
-        }
-    }
-
-    public List<TextComposite> getWords() {
-        List<TextComposite> wordsList = new ArrayList<>();
-        fillWordsList(wordsList);
-//        LOG.debug("Words number: " + wordsList.size());
-        return wordsList;
-    }
-
-    private void fillWordsList(List<TextComposite> wordsList) {
-        for (Component component : this.components) {
-            if (component instanceof TextComposite) {
-                TextComposite textComposite = (TextComposite) component;
-                if (textComposite.getType() == Type.WORD) {
-                    wordsList.add(textComposite);
-                } else {
-                    textComposite.fillWordsList(wordsList);
+                    textComposite.fillCompositeList(compositeList, type);
                 }
             }
         }
@@ -147,7 +107,7 @@ public class TextComposite implements Component, Iterable<Component> {
         return result;
     }
 
-    public static final Comparator<TextComposite> WORDS_NUMBER_COMPARE = (o1, o2) -> Integer.compare(o1.getWords().size(), o2.getWords().size());
+    public static final Comparator<TextComposite> WORDS_NUMBER_COMPARE = (o1, o2) -> Integer.compare(o1.getComposite(Type.WORD).size(), o2.getComposite(Type.WORD).size());
 
     public enum Type {
         TEXT,

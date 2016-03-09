@@ -20,7 +20,7 @@ public class TextService {
     public static String swapFirstAndLastWordsInSentences(String text) {
         Parser parser = new Parser();
         TextComposite textComposite = parser.parse(text);
-        List<TextComposite> sentences = textComposite.getSentences();
+        List<TextComposite> sentences = textComposite.getComposite(TextComposite.Type.SENTENCE);
         for (TextComposite sentence : sentences) {
             List<Integer> indexesList = new ArrayList<>();
             for (Component component : sentence) {
@@ -44,15 +44,15 @@ public class TextService {
     public static List<String> findUniqueWords(String text) {
         Parser parser = new Parser();
         TextComposite textComposite = parser.parse(text);
-        List<TextComposite> sentences = textComposite.getSentences(); // get all sentences of text
+        List<TextComposite> sentences = textComposite.getComposite(TextComposite.Type.SENTENCE); // get all sentences of text
         TextComposite firstSentence = sentences.get(0);
-        List<TextComposite> uniqueWords = firstSentence.getWords(); // list for unique words
+        List<TextComposite> uniqueWords = firstSentence.getComposite(TextComposite.Type.WORD); // list for unique words
         LOG.debug("First sentence size: {}", firstSentence.size());
         List<TextComposite> subSentences = sentences.subList(1, sentences.size());
         LOG.debug("Other sentences number: {}", subSentences.size());
-        for (TextComposite word : firstSentence.getWords()) {
+        for (TextComposite word : firstSentence.getComposite(TextComposite.Type.WORD)) {
             for (TextComposite sentence : subSentences) {
-                for (TextComposite wordSource : sentence.getWords()) {
+                for (TextComposite wordSource : sentence.getComposite(TextComposite.Type.WORD)) {
                     if ((word.toPlainString(new StringBuilder()).toString()).equalsIgnoreCase(
                             (wordSource.toPlainString(new StringBuilder()).toString())
                     )) {
@@ -76,7 +76,7 @@ public class TextService {
         Parser parser = new Parser();
         TextComposite textComposite = parser.parse(text);
         List<String> sortedText = new ArrayList<>();
-        List<TextComposite> sentences = textComposite.getSentences();
+        List<TextComposite> sentences = textComposite.getComposite(TextComposite.Type.SENTENCE);
         sentences.sort(TextComposite.WORDS_NUMBER_COMPARE);
         for (TextComposite sentence : sentences) {
             sortedText.add((sentence.toPlainString(new StringBuilder()).toString()).trim());

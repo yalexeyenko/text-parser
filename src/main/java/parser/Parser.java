@@ -43,7 +43,7 @@ public class Parser {
                 composite.add(component);
             }
         }
-        LOG.debug(composite.getType().name() + " : " + composite.size());
+//        LOG.debug(composite.getType().name() + " : " + composite.size());
         return composite;
     }
 
